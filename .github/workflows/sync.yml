@@ -12,7 +12,8 @@ name: sync
 # commits because Dify's compose file carries the sample SECRET_KEY from Dify's
 # own documentation, so `main` is one commit with the original's tree, that one
 # placeholder replaced by another. It has to be changed before Dify's first
-# start either way.
+# start either way. The original's `.github` is left out: its workflows would
+# run here on every push, with secrets this repository does not have.
 
 on:
   schedule:
@@ -39,6 +40,7 @@ jobs:
           git fetch --quiet upstream main
           git fetch --quiet origin main || true
           git worktree add --quiet --detach snapshot upstream/main
+          rm -rf snapshot/.github
           sed -i 's/SECRET_KEY: sk-[A-Za-z0-9]*/SECRET_KEY: change-this-before-first-start/g' snapshot/Apps/Dify/docker-compose.yml
           tree="$(cd snapshot && git add -A && git write-tree)"
           have="$(git rev-parse --verify --quiet 'origin/main^{tree}' || true)"
