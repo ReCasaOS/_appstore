@@ -4,9 +4,15 @@ name: sync
 # CasaOS fetches as a zip of the `main` branch. Nobody maintains the original
 # any more; the day it goes away, every box keeps the copy it has and never sees
 # an update again, and a fresh install gets the seed the installer ships and
-# nothing after. So `main` here is the original's `main`, byte for byte, taken
-# again every night; AppManagement fetches it when the original stops answering
+# nothing after. So `main` here is the original's tree, taken again every
+# night; AppManagement fetches it when the original stops answering
 # (service/appstore_mirror.go). This branch holds nothing but this file.
+#
+# The tree, not the history: GitHub's push protection refuses the original's
+# commits because Dify's compose file carries the sample SECRET_KEY from Dify's
+# own documentation, so `main` is one commit with the original's tree, that one
+# placeholder replaced by another. It has to be changed before Dify's first
+# start either way.
 
 on:
   schedule:
@@ -19,14 +25,27 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    env:
+      GIT_AUTHOR_NAME: sync
+      GIT_AUTHOR_EMAIL: sync@recasaos.invalid
+      GIT_COMMITTER_NAME: sync
+      GIT_COMMITTER_EMAIL: sync@recasaos.invalid
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: main is the original's main
+      - name: main is the original's tree, one commit
         run: |
           set -euo pipefail
           git remote add upstream https://github.com/IceWhaleTech/_appstore.git
-          git fetch upstream main
-          git push --force origin upstream/main:refs/heads/main
-          echo "main is at $(git rev-parse --short upstream/main)"
+          git fetch --quiet upstream main
+          git fetch --quiet origin main || true
+          git worktree add --quiet --detach snapshot upstream/main
+          sed -i 's/SECRET_KEY: sk-[A-Za-z0-9]*/SECRET_KEY: change-this-before-first-start/g' snapshot/Apps/Dify/docker-compose.yml
+          tree="$(cd snapshot && git add -A && git write-tree)"
+          have="$(git rev-parse --verify --quiet 'origin/main^{tree}' || true)"
+          if [ "${have}" = "${tree}" ]; then
+            echo "main is already the original's tree ($(git rev-parse --short upstream/main))"
+            exit 0
+          fi
+          commit="$(git commit-tree "${tree}" -m "the original's main at $(git rev-parse --short upstream/main), as one commit")"
+          git push --force --quiet origin "${commit}:refs/heads/main"
+          echo "main is now the original's tree at $(git rev-parse --short upstream/main)"
