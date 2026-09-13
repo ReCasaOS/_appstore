@@ -1,0 +1,32 @@
+name: sync
+
+# This repository is a copy of IceWhaleTech/_appstore, the App Store catalogue
+# CasaOS fetches as a zip of the `main` branch. Nobody maintains the original
+# any more; the day it goes away, every box keeps the copy it has and never sees
+# an update again, and a fresh install gets the seed the installer ships and
+# nothing after. So `main` here is the original's `main`, byte for byte, taken
+# again every night; AppManagement fetches it when the original stops answering
+# (service/appstore_mirror.go). This branch holds nothing but this file.
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: main is the original's main
+        run: |
+          set -euo pipefail
+          git remote add upstream https://github.com/IceWhaleTech/_appstore.git
+          git fetch upstream main
+          git push --force origin upstream/main:refs/heads/main
+          echo "main is at $(git rev-parse --short upstream/main)"
