@@ -1,19 +1,16 @@
 name: sync
 
-# This repository is a copy of IceWhaleTech/_appstore, the App Store catalogue
-# CasaOS fetches as a zip of the `main` branch. Nobody maintains the original
-# any more; the day it goes away, every box keeps the copy it has and never sees
-# an update again, and a fresh install gets the seed the installer ships and
-# nothing after. So `main` here is the original's tree, taken again every
-# night; AppManagement fetches it when the original stops answering
-# (service/appstore_mirror.go). This branch holds nothing but this file.
+# The App Store catalogue every CasaOS box fetches is not a repository any more:
+# since February 2025 the default store URL is the artifact IceWhaleTech/
+# CasaOS-AppStore builds on its gh-pages branch, store/main.zip, served through
+# jsdelivr. This repository holds the same bytes, taken again every night, at
 #
-# The tree, not the history: GitHub's push protection refuses the original's
-# commits because Dify's compose file carries the sample SECRET_KEY from Dify's
-# own documentation, so `main` is one commit with the original's tree, that one
-# placeholder replaced by another. It has to be changed before Dify's first
-# start either way. The original's `.github` is left out: its workflows would
-# run here on every push, with secrets this repository does not have.
+#   https://raw.githubusercontent.com/ReCasaOS/_appstore/main/store/main.zip
+#
+# and AppManagement in the ReCasaOS distribution fetches them when IceWhale's URL
+# stops answering (service/appstore_mirror.go). Nothing is edited: the catalogue
+# is IceWhale's. `main` is one commit with the zip and a README, remade when the
+# zip changes; this branch holds nothing but this file.
 
 on:
   schedule:
@@ -33,21 +30,34 @@ jobs:
       GIT_COMMITTER_EMAIL: sync@recasaos.invalid
     steps:
       - uses: actions/checkout@v4
-      - name: main is the original's tree, one commit
+      - name: main holds the store IceWhale builds today
         run: |
           set -euo pipefail
-          git remote add upstream https://github.com/IceWhaleTech/_appstore.git
-          git fetch --quiet upstream main
+          curl -fsSL -o main.zip https://raw.githubusercontent.com/IceWhaleTech/CasaOS-AppStore/gh-pages/store/main.zip
+          apps="$(unzip -l main.zip | awk '{print $4}' | grep -c 'Apps/[^/]*/docker-compose.yml$')"
+          echo "apps in the zip: ${apps}"
+          test "${apps}" -gt 100
           git fetch --quiet origin main || true
-          git worktree add --quiet --detach snapshot upstream/main
-          rm -rf snapshot/.github
-          sed -i 's/SECRET_KEY: sk-[A-Za-z0-9]*/SECRET_KEY: change-this-before-first-start/g' snapshot/Apps/Dify/docker-compose.yml
-          tree="$(cd snapshot && git add -A && git write-tree)"
-          have="$(git rev-parse --verify --quiet 'origin/main^{tree}' || true)"
-          if [ "${have}" = "${tree}" ]; then
-            echo "main is already the original's tree ($(git rev-parse --short upstream/main))"
+          new="$(sha256sum main.zip | cut -c1-64)"
+          have="$(git cat-file -p origin/main:store/main.zip 2>/dev/null | sha256sum | cut -c1-64 || true)"
+          if [ "${new}" = "${have}" ]; then
+            echo "main already holds this zip"
             exit 0
           fi
-          commit="$(git commit-tree "${tree}" -m "the original's main at $(git rev-parse --short upstream/main), as one commit")"
+          cat > README.md <<'EOF'
+          # A copy of the CasaOS App Store catalogue
+
+          `store/main.zip` is the App Store catalogue CasaOS fetches: the artifact
+          [IceWhaleTech/CasaOS-AppStore](https://github.com/IceWhaleTech/CasaOS-AppStore)
+          builds on its `gh-pages` branch, taken again every night, byte for byte.
+          The [ReCasaOS distribution](https://github.com/ReCasaOS/CasaOS-Install) fetches
+          it from here when IceWhale's URL stops answering. Nothing is edited: the
+          catalogue is IceWhale's, and so are the apps in it.
+          EOF
+          export GIT_INDEX_FILE="$(mktemp)"
+          git update-index --add --cacheinfo "100644,$(git hash-object -w main.zip),store/main.zip"
+          git update-index --add --cacheinfo "100644,$(git hash-object -w README.md),README.md"
+          tree="$(git write-tree)"
+          commit="$(git commit-tree "${tree}" -m "IceWhale's store/main.zip as of $(date -u +%Y-%m-%d), ${apps} apps")"
           git push --force --quiet origin "${commit}:refs/heads/main"
-          echo "main is now the original's tree at $(git rev-parse --short upstream/main)"
+          echo "main is now the zip of $(date -u +%Y-%m-%d), ${apps} apps"
