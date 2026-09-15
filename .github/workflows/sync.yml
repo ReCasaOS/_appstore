@@ -54,7 +54,7 @@ jobs:
           it from here when IceWhale's URL stops answering. Nothing is edited: the
           catalogue is IceWhale's, and so are the apps in it.
           EOF
-          export GIT_INDEX_FILE="$(mktemp)"
+          export GIT_INDEX_FILE="$(mktemp -u)"
           git update-index --add --cacheinfo "100644,$(git hash-object -w main.zip),store/main.zip"
           git update-index --add --cacheinfo "100644,$(git hash-object -w README.md),README.md"
           tree="$(git write-tree)"
