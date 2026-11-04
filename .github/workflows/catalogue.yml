@@ -1,0 +1,79 @@
+name: catalogue
+
+# The ReCasaOS app catalogue: IceWhale's store, the RoqueOS list and the Big Bear
+# fork merged into one CasaOS store (catalogue/build.py, documented in README.md).
+# The result is one commit on the `catalogue` branch, remade only when the zip
+# changes, served at
+#
+#   https://raw.githubusercontent.com/ReCasaOS/_appstore/catalogue/store/recasaos.zip
+#
+# A pull request runs the tests and the whole build without publishing. A build
+# the script refuses (too few apps, or a sharp drop against the published one)
+# fails the run and leaves `catalogue` as it was.
+
+on:
+  schedule:
+    - cron: '47 3 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - catalogue/**
+      - .github/workflows/catalogue.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: catalogue
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GIT_AUTHOR_NAME: catalogue
+      GIT_AUTHOR_EMAIL: catalogue@recasaos.invalid
+      GIT_COMMITTER_NAME: catalogue
+      GIT_COMMITTER_EMAIL: catalogue@recasaos.invalid
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install pyyaml
+      - run: python catalogue/test_build.py
+
+      # A source that fails to download is left out here; build.py then carries
+      # its apps over from the published catalogue instead of losing them.
+      - name: Fetch the sources
+        run: |
+          mkdir -p src/icewhale src/bigbear
+          curl -fsSL -o ice.zip https://raw.githubusercontent.com/IceWhaleTech/CasaOS-AppStore/gh-pages/store/main.zip \
+            && unzip -q ice.zip -d src/icewhale || echo "::warning::icewhale did not download"
+          curl -fsSL -o bb.zip https://github.com/ReCasaOS/big-bear-casaos/archive/refs/heads/master.zip \
+            && unzip -q bb.zip -d src/bigbear || echo "::warning::bigbear did not download"
+          # compose files only: the repository is 200 MB of icons and screenshots
+          (git clone -q --depth 1 --filter=blob:none --no-checkout https://github.com/roqueribeiro/roqueos-containers-list src/roqueos \
+            && git -C src/roqueos sparse-checkout set --no-cone '/Apps/*/docker-compose.yml' \
+            && git -C src/roqueos checkout -q) || echo "::warning::roqueos did not download"
+          curl -fsSL -o prev.zip https://raw.githubusercontent.com/ReCasaOS/_appstore/catalogue/store/recasaos.zip || rm -f prev.zip
+          ls -la prev.zip 2>/dev/null || echo "no published catalogue yet"
+
+      - name: Merge
+        run: |
+          python catalogue/build.py --check-images --previous prev.zip \
+            --src icewhale=src/icewhale --src roqueos=src/roqueos --src bigbear=src/bigbear \
+            --out out/store/recasaos.zip --readme out/README.md
+
+      - name: Publish
+        if: github.event_name != 'pull_request'
+        run: |
+          set -euo pipefail
+          if [ -f prev.zip ] && cmp -s prev.zip out/store/recasaos.zip; then
+            echo "catalogue already holds this zip"
+            exit 0
+          fi
+          export GIT_INDEX_FILE="$(mktemp -u)"
+          git update-index --add --cacheinfo "100644,$(git hash-object -w out/store/recasaos.zip),store/recasaos.zip"
+          git update-index --add --cacheinfo "100644,$(git hash-object -w out/README.md),README.md"
+          apps="$(unzip -p out/store/recasaos.zip catalogue.json | python -c 'import json,sys; print(len(json.load(sys.stdin)["apps"]))')"
+          commit="$(git commit-tree "$(git write-tree)" -m "Catalogue of $(date -u +%Y-%m-%d), ${apps} apps")"
+          git push --force --quiet origin "${commit}:refs/heads/catalogue"
+          echo "catalogue is now the build of $(date -u +%Y-%m-%d), ${apps} apps"

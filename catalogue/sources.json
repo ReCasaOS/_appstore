@@ -1,0 +1,20 @@
+[
+  {
+    "id": "icewhale",
+    "name": "IceWhaleTech CasaOS-AppStore",
+    "url": "https://github.com/IceWhaleTech/CasaOS-AppStore",
+    "licence": "Apache-2.0"
+  },
+  {
+    "id": "roqueos",
+    "name": "RoqueOS containers list",
+    "url": "https://github.com/roqueribeiro/roqueos-containers-list",
+    "licence": "MIT"
+  },
+  {
+    "id": "bigbear",
+    "name": "Big Bear CasaOS (ReCasaOS fork)",
+    "url": "https://github.com/ReCasaOS/big-bear-casaos",
+    "licence": "MIT"
+  }
+]
