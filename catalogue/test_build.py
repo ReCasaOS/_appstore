@@ -7,8 +7,8 @@ import build
 SOURCES = [{"id": i, "name": i, "url": "u", "licence": "MIT"} for i in ("a", "b", "c")]
 
 
-def compose(name, image="nginx:1", category="Media"):
-    return f"name: {name}\nservices:\n  {name}:\n    image: {image}\nx-casaos:\n  main: {name}\n  category: {category}\n".encode()
+def compose(name, image="nginx:1", category="Media", extra=""):
+    return f"name: {name}\nservices:\n  {name}:\n    image: {image}\n{extra}x-casaos:\n  main: {name}\n  category: {category}\n".encode()
 
 
 def src(*apps, categories=None, recommend=None):
@@ -39,6 +39,11 @@ class Merge(unittest.TestCase):
         _, rep = self.run_merge({"a": broken, "b": src(("x", {"image": "gone:1"})), "c": src(("x", {}))}, check=check)
         self.assertEqual([a["source"] for a in rep["apps"]], ["c"])
         self.assertEqual({d["reason"].split(":")[0].split(" ")[0] for d in rep["dropped"]}, {"yaml", "bad", "image"})
+
+    def test_network_mode_with_networks_is_dropped(self):
+        both = compose("x", extra="    network_mode: host\n    networks: [n]\n")
+        _, rep = self.run_merge({"a": {"apps": {"x": both}}, "b": src(("y", {}))})
+        self.assertEqual([a["id"] for a in rep["apps"]], ["y"])
 
     def test_unknown_image_verdict_keeps_the_app(self):
         _, rep = self.run_merge({"a": src(("x", {}))}, check=lambda ref: "unknown")

@@ -20,13 +20,13 @@ https://raw.githubusercontent.com/ReCasaOS/_appstore/catalogue/store/recasaos.zi
 
 ## The catalogue
 
-At the first build (2026-11-04): **321 apps** from 326 candidates.
+At the first build (2026-11-04): **320 apps** from 326 candidates.
 
 | Priority | Source | Licence | Apps kept |
 |---|---|---|---|
 | 1 | [IceWhaleTech/CasaOS-AppStore](https://github.com/IceWhaleTech/CasaOS-AppStore) (official) | Apache-2.0 | 179 |
 | 2 | [roqueribeiro/roqueos-containers-list](https://github.com/roqueribeiro/roqueos-containers-list) | MIT | 80 |
-| 3 | [ReCasaOS/big-bear-casaos](https://github.com/ReCasaOS/big-bear-casaos) (fork of the dead bigbeartechworld store, stale since 2024-01) | MIT | 62 |
+| 3 | [ReCasaOS/big-bear-casaos](https://github.com/ReCasaOS/big-bear-casaos) (fork of the dead bigbeartechworld store, stale since 2024-01) | MIT | 61 |
 
 The current count is in the `catalogue` branch's README and in the zip's `catalogue.json` (origin of every app, duplicates resolved, apps dropped and why); `LICENSES/` in the zip holds each source's licence.
 The licence of a source covers its compose files, not the software they install. App compose files are kept exactly as their source ships them, so icons and screenshots are still served from the source's own repository.

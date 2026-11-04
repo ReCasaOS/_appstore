@@ -74,6 +74,8 @@ def check_compose(raw):
     for s, svc in services.items():
         if not isinstance(svc, dict) or not isinstance(svc.get("image"), str):
             return None, f"service {s} has no image"
+        if "network_mode" in svc and "networks" in svc:  # compose refuses it; AppManagement skips the app
+            return None, f"service {s} declares network_mode and networks"
     if not isinstance(doc.get("x-casaos"), dict):  # AppManagement tolerates a `main` that is no service key (AlbyHub)
         return None, "no x-casaos"
     return doc, None
