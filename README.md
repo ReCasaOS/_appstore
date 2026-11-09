@@ -1,0 +1,192 @@
+# ReCasaOS app catalogue
+
+**321 apps**, merged from the sources below by `catalogue/build.py` and rebuilt every night.
+`store/recasaos.zip` is the store a ReCasaOS box fetches. Apps keep their upstream compose file unchanged;
+`catalogue.json` records the origin of each one and `LICENSES/` holds each source's licence text.
+The licence of a source covers its compose files, not the software they install.
+
+| Source (priority order) | Licence | This build | Apps kept |
+|---|---|---|---|
+| [IceWhaleTech CasaOS-AppStore](https://github.com/IceWhaleTech/CasaOS-AppStore) | Apache-2.0 | fetched | 180 |
+| [RoqueOS containers list](https://github.com/roqueribeiro/roqueos-containers-list) | MIT | fetched | 80 |
+| [Big Bear CasaOS (ReCasaOS fork)](https://github.com/ReCasaOS/big-bear-casaos) | MIT | fetched | 61 |
+
+When two sources ship the same app id, the one higher in the table wins. An app is dropped when its compose
+file is invalid or a registry says one of its images does not exist.
+
+## Duplicates resolved (166)
+- `2fauth`: kept from `icewhale`, also in `roqueos`
+- `actualbudget`: kept from `icewhale`, also in `roqueos`
+- `adguard-home`: kept from `icewhale`, also in `roqueos`
+- `adminer`: kept from `icewhale`, also in `roqueos`
+- `albyhub`: kept from `icewhale`, also in `roqueos`
+- `alist`: kept from `icewhale`, also in `roqueos`
+- `alist-sync`: kept from `icewhale`, also in `roqueos`
+- `anaconda3`: kept from `icewhale`, also in `roqueos`
+- `anythingllm`: kept from `icewhale`, also in `roqueos`
+- `archivebox`: kept from `icewhale`, also in `roqueos`
+- `audiobookshelf`: kept from `icewhale`, also in `roqueos`
+- `autobrr`: kept from `icewhale`, also in `roqueos`
+- `bazarr`: kept from `icewhale`, also in `roqueos`
+- `beaverhabittracker`: kept from `icewhale`, also in `roqueos`
+- `bentopdf`: kept from `icewhale`, also in `roqueos`
+- `blinko`: kept from `icewhale`, also in `roqueos`
+- `calibre-web`: kept from `icewhale`, also in `roqueos`
+- `chatbot-ui`: kept from `icewhale`, also in `roqueos`
+- `chatgpt-next-web`: kept from `icewhale`, also in `roqueos`
+- `cloudbeaver`: kept from `icewhale`, also in `roqueos`
+- `cloudflared`: kept from `icewhale`, also in `roqueos`
+- `convertx`: kept from `icewhale`, also in `roqueos`
+- `copyparty`: kept from `icewhale`, also in `roqueos`
+- `crafty`: kept from `icewhale`, also in `roqueos`
+- `databag`: kept from `icewhale`, also in `roqueos`
+- `ddns-go`: kept from `icewhale`, also in `roqueos`
+- `ddns-updater`: kept from `icewhale`, also in `roqueos`
+- `deepseek-ocr-nvidia`: kept from `icewhale`, also in `roqueos`
+- `deluge`: kept from `icewhale`, also in `roqueos`
+- `dify`: kept from `icewhale`, also in `roqueos`
+- `docmost`: kept from `icewhale`, also in `roqueos`
+- `downtify`: kept from `icewhale`, also in `roqueos`
+- `duckdns`: kept from `icewhale`, also in `roqueos`
+- `duplicati`: kept from `icewhale`, also in `roqueos`
+- `emby`: kept from `icewhale`, also in `roqueos`
+- `emby-nvidia`: kept from `icewhale`, also in `roqueos`
+- `embystat`: kept from `icewhale`, also in `roqueos`
+- `emulatorjs`: kept from `icewhale`, also in `roqueos`
+- `esphome`: kept from `icewhale`, also in `roqueos`
+- `etherpad`: kept from `icewhale`, also in `roqueos`
+- `excalidraw`: kept from `icewhale`, also in `roqueos`
+- `filedrop`: kept from `icewhale`, also in `roqueos`
+- `fileflows`: kept from `icewhale`, also in `roqueos`
+- `firefly`: kept from `icewhale`, also in `roqueos`
+- `flaresolverr`: kept from `icewhale`, also in `roqueos`
+- `flowise`: kept from `icewhale`, also in `roqueos`
+- `freshrss`: kept from `icewhale`, also in `roqueos`
+- `frigate`: kept from `icewhale`, also in `roqueos`
+- `gateway-go`: kept from `icewhale`, also in `roqueos`
+- `gitea`: kept from `icewhale`, also in `roqueos`
+- `glances`: kept from `icewhale`, also in `roqueos`
+- `gopeed`: kept from `icewhale`, also in `roqueos`
+- `grafana`: kept from `icewhale`, also in `roqueos`
+- `handbrake`: kept from `icewhale`, also in `roqueos`
+- `holoplay`: kept from `icewhale`, also in `roqueos`
+- `homeassistant`: kept from `icewhale`, also in `roqueos`
+- `homebridge`: kept from `icewhale`, also in `roqueos`
+- `hugo`: kept from `icewhale`, also in `roqueos`
+- `icewhale-stable-diffusion-webui`: kept from `icewhale`, also in `roqueos`
+- `immich`: kept from `icewhale`, also in `roqueos`
+- `index-tts`: kept from `icewhale`, also in `roqueos`
+- `index-tts-nvidia`: kept from `icewhale`, also in `roqueos`
+- `jackett`: kept from `icewhale`, also in `roqueos`
+- `jdownloader2`: kept from `icewhale`, also in `roqueos`
+- `jellyfin`: kept from `icewhale`, also in `roqueos`
+- `jellyfin-nvidia`: kept from `icewhale`, also in `roqueos`
+- `jellyseerr`: kept from `icewhale`, also in `roqueos`
+- `jenkins`: kept from `icewhale`, also in `roqueos`
+- `karakeep`: kept from `icewhale`, also in `roqueos`
+- `kavita`: kept from `icewhale`, also in `roqueos`
+- `komga`: kept from `icewhale`, also in `roqueos`
+- `label-studio`: kept from `icewhale`, also in `roqueos`
+- `langflow`: kept from `icewhale`, also in `roqueos`
+- `lazylibrarian`: kept from `icewhale`, also in `roqueos`
+- `librechat`: kept from `icewhale`, also in `roqueos`
+- `libredb-studio`: kept from `icewhale`, also in `roqueos`
+- `lidarr`: kept from `icewhale`, also in `roqueos`
+- `linkwarden`: kept from `icewhale`, also in `roqueos`
+- `llama-factory-nvidia`: kept from `icewhale`, also in `roqueos`
+- `lucky`: kept from `icewhale`, also in `roqueos`
+- `lyrionmusicserver`: kept from `icewhale`, also in `roqueos`
+- `mariadb`: kept from `icewhale`, also in `roqueos`
+- `maybe`: kept from `icewhale`, also in `roqueos`
+- `medusa`: kept from `icewhale`, also in `roqueos`
+- `memos`: kept from `icewhale`, also in `roqueos`
+- `mineos-node`: kept from `icewhale`, also in `roqueos`
+- `mongodb`: kept from `icewhale`, also in `roqueos`
+- `mongodb4`: kept from `icewhale`, also in `roqueos`
+- `monica`: kept from `icewhale`, also in `roqueos`
+- `motioneye`: kept from `icewhale`, also in `roqueos`
+- `mylar3`: kept from `icewhale`, also in `roqueos`
+- `myspeed`: kept from `icewhale`, also in `roqueos`
+- `n8n`: kept from `icewhale`, also in `roqueos`
+- `navidrome`: kept from `icewhale`, also in `roqueos`
+- `netbird`: kept from `icewhale`, also in `roqueos`
+- `netdata`: kept from `icewhale`, also in `roqueos`
+- `nextcloud`: kept from `icewhale`, also in `roqueos`
+- `nginxproxymanager`: kept from `icewhale`, also in `roqueos`
+- `node-red`: kept from `icewhale`, also in `roqueos`
+- `nzbget`: kept from `icewhale`, also in `roqueos`
+- `obsidian`: kept from `icewhale`, also in `roqueos`
+- `ollama`: kept from `icewhale`, also in `roqueos`
+- `ollama-nvidia`: kept from `icewhale`, also in `roqueos`
+- `ombi`: kept from `icewhale`, also in `roqueos`
+- `open-webui-ollama`: kept from `icewhale`, also in `roqueos`
+- `openclaw`: kept from `icewhale`, also in `roqueos`
+- `openhab`: kept from `icewhale`, also in `roqueos`
+- `openhands`: kept from `icewhale`, also in `roqueos`
+- `openlist`: kept from `icewhale`, also in `roqueos`
+- `openspeedtest`: kept from `icewhale`, also in `roqueos`
+- `opodsync`: kept from `icewhale`, also in `roqueos`
+- `overseerr`: kept from `icewhale`, also in `roqueos`
+- `pdfding`: kept from `icewhale`, also in `roqueos`
+- `peanut`: kept from `icewhale`, also in `roqueos`
+- `petio`: kept from `icewhale`, also in `roqueos`
+- `photoprism`: kept from `icewhale`, also in `roqueos`
+- `pihole`: kept from `icewhale`, also in `roqueos`
+- `pinchflat`: kept from `icewhale`, also in `roqueos`
+- `pingvin-share`: kept from `icewhale`, also in `roqueos`
+- `playit-agent`: kept from `icewhale`, also in `roqueos`
+- `plex`: kept from `icewhale`, also in `roqueos`
+- `plex-nvidia`: kept from `icewhale`, also in `roqueos`
+- `pocketbase`: kept from `icewhale`, also in `roqueos`
+- `podfetch`: kept from `icewhale`, also in `roqueos`
+- `portainer`: kept from `icewhale`, also in `roqueos`
+- `postgresql`: kept from `icewhale`, also in `roqueos`
+- `prowlarr`: kept from `icewhale`, also in `roqueos`
+- `psitransfer`: kept from `icewhale`, also in `roqueos`
+- `pyload`: kept from `icewhale`, also in `roqueos`
+- `qbittorrent`: kept from `icewhale`, also in `roqueos`
+- `radarr`: kept from `icewhale`, also in `roqueos`
+- `rdtclient`: kept from `icewhale`, also in `roqueos`
+- `readarr`: kept from `icewhale`, also in `roqueos`
+- `resilio-sync`: kept from `icewhale`, also in `roqueos`
+- `retroarch`: kept from `icewhale`, also in `roqueos`
+- `romm`: kept from `icewhale`, also in `roqueos`
+- `roonserver`: kept from `icewhale`, also in `roqueos`
+- `sabnzbd`: kept from `icewhale`, also in `roqueos`
+- `sickchill`: kept from `icewhale`, also in `roqueos`
+- `siyuan-note`: kept from `icewhale`, also in `roqueos`
+- `smokeping`: kept from `icewhale`, also in `roqueos`
+- `snapdrop`: kept from `icewhale`, also in `roqueos`
+- `sonarr`: kept from `icewhale`, also in `roqueos`
+- `stremio`: kept from `icewhale`, also in `roqueos`
+- `sure`: kept from `icewhale`, also in `roqueos`
+- `swingmusic`: kept from `icewhale`, also in `roqueos`
+- `syncthing`: kept from `icewhale`, also in `roqueos`
+- `tailscale`: kept from `icewhale`, also in `roqueos`
+- `taskingai`: kept from `icewhale`, also in `roqueos`
+- `tautulli`: kept from `icewhale`, also in `roqueos`
+- `teable`: kept from `icewhale`, also in `roqueos`
+- `threadfin`: kept from `icewhale`, also in `roqueos`
+- `transmission`: kept from `icewhale`, also in `roqueos`
+- `trilium`: kept from `icewhale`, also in `roqueos`
+- `twingate-connector`: kept from `icewhale`, also in `roqueos`
+- `unifi-controller`: kept from `icewhale`, also in `roqueos`
+- `unifi-network-application`: kept from `icewhale`, also in `roqueos`
+- `uptimekuma`: kept from `icewhale`, also in `roqueos`
+- `v2raya`: kept from `icewhale`, also in `roqueos`
+- `vaultwarden`: kept from `icewhale`, also in `roqueos`
+- `virt-manager`: kept from `icewhale`, also in `roqueos`
+- `vocechat`: kept from `icewhale`, also in `roqueos`
+- `wallabag`: kept from `icewhale`, also in `roqueos`
+- `webdav`: kept from `icewhale`, also in `roqueos`
+- `wg-easy`: kept from `icewhale`, also in `roqueos`
+- `ztnet`: kept from `icewhale`, also in `roqueos`
+
+## Dropped (7)
+- `adguard-home` (bigbear): service app declares network_mode and networks
+- `ragflow` (icewhale): image quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z
+- `weknora` (icewhale): image minio/minio:RELEASE.2025-09-07T16-13-09Z
+- `minio` (roqueos): image quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z
+- `ragflow` (roqueos): image quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z
+- `readeck` (roqueos): image codeberg.org/readeck/readeck:0.22.3@sha256:ed1c513f8e1d59b1d38fda324ac279eeb65afd0327907e498061ec9fd2f31c15
+- `big-bear-pihole-unbound` (bigbear): image bigbeartechworld/big-bear-pihole-unbound:2023.11.0
